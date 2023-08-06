@@ -1,0 +1,54 @@
+/******************************************************************************
+ *
+ * Module: DC-MOTOR
+ *
+ * File Name: dc_motor.h
+ *
+ * Description: Source file for the ATmega16 DC-MOTOR driver
+ *
+ * Author: Ahmed El-Askary
+ *
+ *******************************************************************************/
+
+#ifndef DC_MOTOR_H_
+#define DC_MOTOR_H_
+
+#include"std_types.h"
+#include "gpio.h"
+
+
+/*******************************************************************************
+ *                                Definitions                                  *
+ *******************************************************************************/
+#define MOTOR_PORT_ID            PORTB_ID
+#define MOTOR_PIN0_ID            PIN0_ID
+#define MOTOR_PIN1_ID            PIN1_ID
+
+/*******************************************************************************
+ *                         Types Declaration                                   *
+ *******************************************************************************/
+typedef enum
+{
+	STOP,
+	CW,
+	ACW
+}DcMotor_State;
+
+/*******************************************************************************
+ *                      Functions Prototypes                                   *
+ *******************************************************************************/
+
+/*
+ * Description :
+ * Function responsible for initialize the DC-MOTOR driver..
+ * Motor is stop at the beginning
+ */
+void DcMotor_Init(void) ;
+
+
+void DcMotor_Rotate(DcMotor_State state, uint8 speed);
+
+
+
+
+#endif /* DC_MOTOR_H_ */

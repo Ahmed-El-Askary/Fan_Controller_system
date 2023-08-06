@@ -1,0 +1,92 @@
+/*
+ ================================================================================================
+ Name        : Mini_Project3.c
+ Author      : Ahmed El-Askary
+ Description : Design a temperature-controlled fan using ATmega32 microcontroller
+ Date        : 12/5/2023
+ ================================================================================================
+ */
+#include "lcd.h"
+#include "lm35_sensor.h"
+#include "dc_motor.h"
+#include "pwm.h"
+#include "adc.h"
+
+int main()
+{
+	DcMotor_init();
+	DcMotor_State state = STOP;
+	LCD_init();
+
+	ADC_ConfigType ConfigType;
+	ConfigType.ref_volt = INTERNAL;
+	ConfigType.prescaler = F_CPU_8;
+	ADC_ConfigType *Config_Ptr = &ConfigType;
+	ADC_init(Config_Ptr);
+
+	uint8 temperature;
+
+	while(1)
+	{
+
+		//PWM_Timer0_Start (30);
+		temperature=LM35_getTemperature();
+
+		if (temperature<30)
+		{
+			state = STOP ;
+			DcMotor_Rotate(STOP,0);
+			LCD_moveCursor(0,2);
+			LCD_displayString("FAN is OFF");
+			LCD_moveCursor(1,2);
+			LCD_displayString("  Temp = ");
+			LCD_intgerToString(temperature);
+			LCD_displayString(" C");
+		}
+		else if ((temperature>=30)&&(temperature<60))
+		{
+			state = CW ;
+			DcMotor_Rotate(CW,25);
+			LCD_moveCursor(0,2);
+			LCD_displayString(" FAN is ON");
+			LCD_moveCursor(1,2);
+			LCD_displayString("  Temp = ");
+			LCD_intgerToString(temperature);
+			LCD_displayString(" C");
+		}
+		else if ((temperature>=60)&&(temperature<90))
+		{
+			state = CW ;
+			DcMotor_Rotate(CW,50);
+			LCD_moveCursor(0,2);
+			LCD_displayString(" FAN is ON");
+			LCD_moveCursor(1,2);
+			LCD_displayString("  Temp = ");
+			LCD_intgerToString(temperature);
+			LCD_displayString(" C");
+		}
+
+		else if ((temperature>=90)&&(temperature<120))
+		{
+			state = CW ;
+			DcMotor_Rotate(CW,75);
+			LCD_moveCursor(0,2);
+			LCD_displayString(" FAN is ON");
+			LCD_moveCursor(1,2);
+			LCD_displayString(" Temp = ");
+			LCD_intgerToString(temperature);
+			LCD_displayString(" C");
+		}
+		else if (temperature>=120)
+		{
+			state = CW ;
+			DcMotor_Rotate(CW,100);
+			LCD_moveCursor(0,2);
+			LCD_displayString(" FAN is ON");
+			LCD_moveCursor(1,2);
+			LCD_displayString(" Temp = ");
+			LCD_intgerToString(temperature);
+			LCD_displayString(" C");
+		}
+	}
+}

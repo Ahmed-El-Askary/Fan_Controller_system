@@ -1,0 +1,45 @@
+/******************************************************************************
+ *
+ * Module: DC-MOTOR
+ *
+ * File Name: dc_motor.c
+ *
+ * Description: Source file for the ATmega16 DC-MOTOR driver
+ *
+ * Author: Ahmed El-Askary
+ *
+ *******************************************************************************/
+#include "std_types.h"
+#include "pwm.h"
+#include "gpio.h"
+#include "dc_motor.h"
+
+/*******************************************************************************
+ *                      Functions Definitions                                  *
+ *******************************************************************************/
+void DcMotor_init(void)
+{
+	PWM_Timer0_init();
+	GPIO_setupPinDirection(MOTOR_PORT_ID,PIN0_ID,PIN_OUTPUT);
+	GPIO_setupPinDirection(MOTOR_PORT_ID,PIN1_ID,PIN_OUTPUT);
+	GPIO_writePort(MOTOR_PORT_ID,LOGIC_LOW);
+}
+void DcMotor_Rotate(DcMotor_State state,uint8 speed)
+{
+	PWM_Timer0_Start (((uint16)(speed*255)/(100)));
+	switch(state)
+	{
+	case STOP:
+		GPIO_writePin(MOTOR_PORT_ID, PIN0_ID, LOGIC_LOW);
+		GPIO_writePin(MOTOR_PORT_ID, PIN1_ID, LOGIC_LOW);
+		break;
+	case CW:
+		GPIO_writePin(MOTOR_PORT_ID, PIN0_ID, LOGIC_LOW);
+		GPIO_writePin(MOTOR_PORT_ID, PIN0_ID, LOGIC_HIGH);
+		break;
+	case ACW:
+		GPIO_writePin(MOTOR_PORT_ID, PIN0_ID, LOGIC_HIGH);
+		GPIO_writePin(MOTOR_PORT_ID, PIN0_ID, LOGIC_LOW);
+		break;
+	}
+}
